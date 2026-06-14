@@ -10,8 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Ping Main Backend
-        # REPLACE THIS URL with your actual Render Main Backend URL
-        run: curl -sSf https://YOUR_MAIN_BACKEND_URL.onrender.com/health || echo "Backend ping failed"
+        run: curl -sSf https://pulsecrm-ikbb.onrender.com/health || echo "Backend ping failed"
       
       - name: Ping Channel Service
         # REPLACE THIS URL with your actual Render Channel Service URL

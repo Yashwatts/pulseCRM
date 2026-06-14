@@ -13,5 +13,4 @@ jobs:
         run: curl -sSf https://pulsecrm-ikbb.onrender.com/health || echo "Backend ping failed"
       
       - name: Ping Channel Service
-        # REPLACE THIS URL with your actual Render Channel Service URL
-        run: curl -sSf https://YOUR_CHANNEL_SERVICE_URL.onrender.com/health || echo "Channel service ping failed"
+        run: curl -sSf https://pulsecrm-1.onrender.com/health || echo "Channel service ping failed"

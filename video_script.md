@@ -1,9 +1,9 @@
-# PulseCRM AI - Video Presentation Script (Easy English Version)
+# PulseCRM AI - Video Presentation Script (Extended Version)
 
 > [!TIP]
-> **Total Estimated Time:** ~5:30
-> **Target Word Count:** ~750 words
-> **Setup Required:** Have your local servers running (`backend`, `frontend`, `channel-service`). Have the web browser open to the local frontend. Open VS Code with `backend/src/services/aiService.ts` ready to show.
+> **Total Estimated Time:** ~5:30 - 6:00
+> **Target Word Count:** ~900 words
+> **Setup Required:** Have your local servers running (`backend`, `frontend`, `channel-service`). Have the web browser open to the local frontend. Open VS Code with `backend/src/services/aiService.ts` and `channel-service/src/index.ts` ready to show.
 
 ---
 
@@ -52,32 +52,34 @@ The smartest part of our setup is the 'Channel Service'. If we tried to send 100
 
 ---
 
-## 4. Code Walkthrough (3:30 - 4:30)
-**Visual (Screen):** Open VS Code. Show the folders (`backend/src/...`). Open the file `backend/src/services/aiService.ts`. Scroll through the code slowly.
+## 4. Code Walkthrough (3:30 - 5:00)
+**Visual (Screen):** Open VS Code. 
+1. Open the file `backend/src/services/aiService.ts`. Highlight the `systemInstruction` block.
+2. Open `channel-service/src/index.ts`. Scroll down to the `processBatch` and `sendWebhookWithRetry` functions.
 
 **Audio (Voiceover):**
-"Let’s take a quick look at the code. To keep things clean and easy to read, we separated different parts of our backend. 
+"Let’s take a deeper look at the code. To keep things clean and easy to read, we separated different parts of our backend. 
 
-If we look at the file `aiService.ts`, this is where the AI magic happens. When you type a request, the system passes it here. We use the Google Gemini API to figure out what you want. Notice how we keep the AI part separate from the database code. This makes our code much easier to manage and update."
+First, let's look at `aiService.ts`. This is the brain of our AI features. When you type a request in the segment builder, the system passes your exact words here. Notice our strict 'System Instruction'. We explicitly tell the Google Gemini API to *never* write direct database code. Instead, we force it to return a simple JSON object matching a specific schema, like 'Field', 'Operator', and 'Value'. Our backend then safely checks this JSON before doing anything. This completely removes the risk of the AI running bad commands on our database. 
+
+Next, let's look at a totally different part of the architecture: the Channel Service. I'll open `channel-service/src/index.ts`. This is our separate background worker running on port 5001. 
+
+When we launch a campaign, the main CRM sends a massive batch of messages here. Notice how the service immediately replies with an 'Accepted' status. This unblocks the main CRM instantly. Then, it processes the messages in the background, simulating real-world network delays and statuses like 'Failed', 'Opened', or 'Clicked'. Finally, it sends these updates back to our main database using Webhooks with an automatic retry system. This is exactly how we handle scale safely."
 
 ---
 
-## 5. AI-Native Workflow & Security (4:30 - 5:30)
+## 5. AI-Native Workflow & Security (5:00 - 5:45)
 **Visual (Screen):** Stay in VS Code, or show the manual fallback UI in the Segment Builder on the browser.
 
 **Audio (Voiceover):**
-"A big problem with AI is security. What if the AI makes a mistake and tries to run a bad command on our database?
+"To quickly wrap up our security and workflow: a big problem with AI is reliability. What if the AI service ever stops working? 
 
-We solved this by giving the AI strict rules. We tell Gemini to never write direct database code. Instead, it just gives us a simple list of rules, like 'Field: Total Spent, Rule: Greater Than 500'. 
-
-Our backend checks these rules to make sure they are 100% safe before doing anything. If the AI makes a mistake, our system catches it and stops it. 
-
-Also, if the AI service ever stops working, our app has a backup 'manual mode'. So, the CRM will always keep working and your business never stops."
+We built our app to handle that gracefully. If Gemini fails or times out, our application has a backup 'manual mode'. The UI automatically switches to a standard filter builder. So, the CRM will always keep working, and your business never stops. The AI is a powerful assistant, but the core CRM is always stable."
 
 ---
 
-## 6. Conclusion (5:30 - 5:45)
+## 6. Conclusion (5:45 - 6:00)
 **Visual (Screen):** Back to the main dashboard or a final slide with your name and contact info.
 
 **Audio (Voiceover):**
-"In short, PulseCRM connects complex data with an easy-to-use interface. By combining a strong technical setup with Google Gemini, we've built a smart, fast, and safe tool for marketers. Thank you for watching!"
+"In short, PulseCRM connects complex data with an easy-to-use interface. By combining a distributed worker setup with Google Gemini, we've built a smart, fast, and safe tool for marketers. Thank you for watching!"
